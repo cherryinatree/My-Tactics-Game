@@ -12,4 +12,6 @@ public class LoadSceneData
 
     public List<Character> enemyList;
     public List<Character> playerList;
+
+    public BoardChanges boardChanges;
 }

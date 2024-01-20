@@ -13,7 +13,7 @@ public class CombatCamera : MonoBehaviour
     public float rotateAmount = 90; 
     public Transform CursorPosition;
 
-    private CinemachineTransposer transposer;
+    private CinemachineFramingTransposer transposer;
     private Vector3 origionalTransposerBody;
 
     public float turnChangeRotateSpeed = 40;
@@ -23,8 +23,9 @@ public class CombatCamera : MonoBehaviour
 
     private void Start()
     {
-        transposer = cam.GetCinemachineComponent<CinemachineTransposer>();
-        origionalTransposerBody = transposer.m_FollowOffset;
+        transposer = cam.GetCinemachineComponent<CinemachineFramingTransposer>();
+        transposer.m_TrackedObjectOffset = Constants.CameraConstants.Default;
+        origionalTransposerBody = transposer.m_TrackedObjectOffset;
     }
 
     // Update is called once per frame
@@ -32,6 +33,25 @@ public class CombatCamera : MonoBehaviour
     {
         isTurnChange();
     }
+
+
+    public void ResetCamera()
+    {
+        transposer.m_TrackedObjectOffset = Constants.CameraConstants.Default;
+        origionalTransposerBody = transposer.m_TrackedObjectOffset;
+    }
+
+    public void ChangeCameraOffset(Vector3 newOffset)
+    {
+        transposer.m_TrackedObjectOffset = newOffset;
+        origionalTransposerBody = transposer.m_TrackedObjectOffset;
+    }
+
+    public void RotateCamera()
+    {
+
+    }
+
 
 
     private void isTurnChange()
@@ -53,31 +73,39 @@ public class CombatCamera : MonoBehaviour
     private void ActionCamera()
     {
 
-        if (transposer.m_FollowOffset != Constants.CameraConstants.Duel)
+        if (transposer.m_TrackedObjectOffset != Constants.CameraConstants.Duel)
         {
-            transposer.m_FollowOffset = Constants.CameraConstants.Duel;
+            transposer.m_TrackedObjectOffset = Constants.CameraConstants.Duel;
         }
 
+        for (int i = 0; i < targetGroup.m_Targets.Length; i++)
+        {
+            //targetGroup.m_Targets[i].radius = 1.5f;
+        }
+        
+        
         cam.Follow = targetGroup.Transform;
         cam.LookAt = targetGroup.Transform;
+        
+
     }
 
     private void TurnChangeRotate()
     {
 
-        if (transposer.m_FollowOffset != Constants.CameraConstants.TurnChange)
+        if (transposer.m_TrackedObjectOffset != Constants.CameraConstants.TurnChange)
         {
-            transposer.m_FollowOffset = Constants.CameraConstants.TurnChange;
+            transposer.m_TrackedObjectOffset = Constants.CameraConstants.TurnChange;
         }
         UnityAddOn.RotateY(CursorPosition, turnChangeRotateSpeed);
     }
 
     private void CurrentRotation()
     {
-        if(transposer.m_FollowOffset != origionalTransposerBody)
+        if(transposer.m_TrackedObjectOffset != origionalTransposerBody)
         {
             LookAtCursor();
-            transposer.m_FollowOffset = origionalTransposerBody;
+            transposer.m_TrackedObjectOffset = origionalTransposerBody;
         }
 
         if (CursorPosition.position != CombatSingleton.Instance.CursorCube.transform.position)

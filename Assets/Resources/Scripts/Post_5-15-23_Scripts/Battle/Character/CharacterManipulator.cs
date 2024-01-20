@@ -33,6 +33,25 @@ public static class CharacterManipulator
         turnController.CheckIfTurnOver();
     }
 
+    public static void RemoveAllActionPoints(GameObject character)
+    {
+        isTurnControllerNull();
+        character.GetComponent<CombatCharacter>().myStats.actionsRemaining = 0;
+        turnController.CheckIfTurnOver();
+    }
+    public static void RemoveAllActionPoints(CombatCharacter character)
+    {
+        isTurnControllerNull();
+        character.myStats.actionsRemaining = 0;
+        turnController.CheckIfTurnOver();
+    }
+    public static void RemoveAllActionPoints(Character character)
+    {
+        isTurnControllerNull();
+        character.actionsRemaining = 0;
+        turnController.CheckIfTurnOver();
+    }
+
     public static void LevelUp(Character character)
     {
 

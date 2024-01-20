@@ -54,6 +54,9 @@ public class SelectKey
     {
         if (Astar.WithAbilityRange(false))
         {
+            CombatSingleton.Instance.FocusCharacter.GetComponent<CombatCharacter>().myStats.currentMana -=
+                CombatSingleton.Instance.actionData.ChosenAbility.MPCost;
+
             CharacterManipulator.RemoveActionPoints(CombatSingleton.Instance.actionData.OriginCharacter, 1);
             GetTargetsInRange();
             CombatSingleton.Instance.actionData.actions.Abiliy();
@@ -96,28 +99,34 @@ public class SelectKey
             case CUBEPHASE.ATTACK:
                 if (CheckCubeForTarget())
                 {
-                    CharacterManipulator.RemoveActionPoints(CombatSingleton.Instance.FocusCharacter, 1);
+                    CombatSingleton.Instance.FocusCharacter.GetComponent<CombatCharacter>().myStats.currentMana -=
+                        CombatSingleton.Instance.actionData.ChosenAbility.MPCost;
+
+                    CharacterManipulator.RemoveAllActionPoints(CombatSingleton.Instance.FocusCharacter);
                     actions.Abiliy();
                 }
                 break;
             case CUBEPHASE.MAGIC:
                 if (CheckCubeForTarget())
                 {
-                    CharacterManipulator.RemoveActionPoints(CombatSingleton.Instance.FocusCharacter, 1);
+                    CombatSingleton.Instance.FocusCharacter.GetComponent<CombatCharacter>().myStats.currentMana -=
+                        CombatSingleton.Instance.actionData.ChosenAbility.MPCost;
+
+                    CharacterManipulator.RemoveAllActionPoints(CombatSingleton.Instance.FocusCharacter);
                     actions.Abiliy();
                 }
                 break;
             case CUBEPHASE.ITEM:
                 if (CheckCubeForTarget())
                 {
-                    CharacterManipulator.RemoveActionPoints(CombatSingleton.Instance.FocusCharacter, 1);
+                    CharacterManipulator.RemoveAllActionPoints(CombatSingleton.Instance.FocusCharacter);
                     actions.Item();
                 }
                 break;
             case CUBEPHASE.CAPTURE:
                 if (CheckCubeForTarget())
                 {
-                    CharacterManipulator.RemoveActionPoints(CombatSingleton.Instance.FocusCharacter, 1);
+                    CharacterManipulator.RemoveAllActionPoints(CombatSingleton.Instance.FocusCharacter);
                     actions.Capture();
                 }
                 break;

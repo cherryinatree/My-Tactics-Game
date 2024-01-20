@@ -109,20 +109,25 @@ public static class CubeRetriever
     public static GameObject FindCubeInDirection(GameObject start, Vector3 direction)
     {
         Collider[] tempPos1;
-        Vector3 halfExtends = new Vector3(0.25f, 0.45f, 0.25f);
-        tempPos1 = Physics.OverlapBox(start.transform.position + direction, halfExtends);
+        Vector3 halfExtends = new Vector3(0.25f, 1.45f, 0.25f);
+
+
+
+
+        tempPos1 = Physics.OverlapBox(start.transform.position + (direction), halfExtends);
+
 
         if (tempPos1.Length > 0)
         {
-            if (tempPos1[0].gameObject.GetComponent<Cube>())
+            for (int i = 0; i < tempPos1.Length; i++)
             {
+                if (tempPos1[i].gameObject.GetComponent<Cube>())
+                {
+                    return tempPos1[i].gameObject;
+                }
+            }
 
-                return tempPos1[0].gameObject;
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
         else
         { 

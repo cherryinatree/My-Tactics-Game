@@ -66,6 +66,31 @@ public static class SaveManipulator
         SaveData.Current.mainData.loadSceneData.playerList = new List<Character>();
         SaveData.Current.mainData.loadSceneData.currentSceneName = SceneManager.GetActiveScene().name;
 
+        if (CombatSingleton.Instance.SaveObjects != null)
+        {
+            foreach (GameObject gObject in CombatSingleton.Instance.SaveObjects)
+            {
+                if (gObject != null)
+                    gObject.GetComponent<MyDataUploader>().UploadChangesToSave();
+            }
+        }
+        if (CombatSingleton.Instance.SaveTriggers != null)
+        {
+            foreach (GameObject gObject in CombatSingleton.Instance.SaveTriggers)
+            {
+                if (gObject != null)
+                    gObject.GetComponent<CubeTrigger>().UploadChangesToSave();
+            }
+        }
+        if (CombatSingleton.Instance.SaveMovers != null)
+        {
+            foreach (GameObject gObject in CombatSingleton.Instance.SaveMovers)
+            {
+                if (gObject != null)
+                    gObject.GetComponent<TriggerMove>().UploadChangesToSave();
+            }
+        }
+
         foreach (GameObject character in CombatSingleton.Instance.Combatants)
         {
             if(character.GetComponent<CombatCharacter>().team != 0)
@@ -89,6 +114,7 @@ public static class SaveManipulator
         SaveData.Current.mainData.loadSceneData.isLoad = false;
         SaveData.Current.mainData.loadSceneData.enemyList = new List<Character>();
         SaveData.Current.mainData.loadSceneData.playerList = new List<Character>();
+        SaveData.Current.mainData.loadSceneData.boardChanges.changes.Clear();
         SaveData.Current.mainData.loadSceneData.currentSceneName = SceneManager.GetActiveScene().name;
     }
 

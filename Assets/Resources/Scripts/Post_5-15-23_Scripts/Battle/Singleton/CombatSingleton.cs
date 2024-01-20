@@ -15,6 +15,9 @@ public class CombatSingleton
     public GameObject InfoCharacter;
     public bool isUiOn = false;
 
+    public List<GameObject> SaveObjects;
+    public List<GameObject> SaveTriggers;
+    public List<GameObject> SaveMovers;
     public BattleSystem battleSystem;
     public ActionData actionData;
 

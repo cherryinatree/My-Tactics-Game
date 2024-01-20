@@ -13,16 +13,15 @@ public class ActionAnimation
     GameObject itemPrefab;
 
 
-
     public void AnimateActionInitated_Item(Item item)
     {
-        itemPrefab = null;
+        itemPrefab = GameObject.Instantiate(GamingTools.ResourseLoader.GetGameObject(item.animation));
         SpawnOnTarget_Item(item);
 
     }
     public void AnimateActionInitated_Capture(List<bool> isHit, GameObject CapturePrefab)
     {
-        SpawnAboveTarget_Capture(isHit, CapturePrefab);
+        SpawnCapture(isHit, CapturePrefab);
 
     }
 
@@ -49,6 +48,9 @@ public class ActionAnimation
             case ("SpawnAboveTarget"):
                 SpawnAboveTarget(isHit, AbilityPrefab);
                 break;
+            case ("SpawnAtTargetFeet"):
+                SpawnAtTargetFeet(isHit, AbilityPrefab);
+                break;
         }
 
 
@@ -72,14 +74,12 @@ public class ActionAnimation
                 for (int x = 0; x < 3; x++)
                 {
                     abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                    abilityInstance.transform.position = new Vector3(CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.x + (x),
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.y + 1,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.z);
+                    Vector3 position = CombatSingleton.Instance.actionData.OriginCharacter.transform.Find("Instantiates").Find("Cast").position;
 
-                    abilityInstance.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>(
-                        CombatSingleton.Instance.actionData.ChosenAbility.animation);
-                    abilityInstance.GetComponent<MoveTowards>().Destination = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
-                    abilityInstance.GetComponent<MoveTowards>().delay = 1.5f;
+                    abilityInstance.transform.position = position;
+                    abilityInstance.transform.LookAt(
+                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.Find("Instantiates").Find("HitSpot").position);
+
                 }
             }
         }
@@ -90,44 +90,44 @@ public class ActionAnimation
         {
             if (isHit[i] == true)
             {
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.Find("Instantiates").Find("HitSpot").position;
                 abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>(
-                    CombatSingleton.Instance.actionData.ChosenAbility.animation);
-                abilityInstance.transform.position = CombatSingleton.Instance.actionData.OriginCharacter.transform.position;
-                abilityInstance.GetComponent<MoveTowards>().Destination = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
+                Transform originPosition = CombatSingleton.Instance.actionData.OriginCharacter.transform.Find("Instantiates").Find("Cast");
+                abilityInstance.transform.position = originPosition.position;
+                abilityInstance.transform.LookAt(position);
             }
             else
             {
-                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.Find("Instantiates").Find("MissSpot").position;
                 abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>(
-                    CombatSingleton.Instance.actionData.ChosenAbility.animation);
-                abilityInstance.transform.position = CombatSingleton.Instance.actionData.OriginCharacter.transform.position;
-                abilityInstance.GetComponent<MoveTowards>().Destination = new Vector3(position.x, position.y + 3, position.z);
+                Transform originPosition = CombatSingleton.Instance.actionData.OriginCharacter.transform.Find("Instantiates").Find("Cast");
+                abilityInstance.transform.position = originPosition.position;
+                abilityInstance.transform.LookAt(position);
             }
         }
     }
+
     private void Laser(List<bool> isHit, GameObject AbilityPrefab)
     {
+
 
         for (int i = 0; i < CombatSingleton.Instance.actionData.TargetCharacters.Count; i++)
         {
             if (isHit[i] == true)
             {
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.Find("Instantiates").Find("HitSpot").position;
                 abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>(
-                    CombatSingleton.Instance.actionData.ChosenAbility.animation);
-                abilityInstance.transform.position = CombatSingleton.Instance.actionData.OriginCharacter.transform.position;
-                abilityInstance.GetComponent<MoveTowards>().Destination = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
+                Transform originPosition = CombatSingleton.Instance.actionData.OriginCharacter.transform.Find("Instantiates").Find("Cast");
+                abilityInstance.transform.position = originPosition.position;
+                abilityInstance.transform.LookAt(position);
             }
             else
             {
-                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.Find("Instantiates").Find("MissSpot").position;
                 abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>(
-                    CombatSingleton.Instance.actionData.ChosenAbility.animation);
-                abilityInstance.transform.position = CombatSingleton.Instance.actionData.OriginCharacter.transform.position;
-                abilityInstance.GetComponent<MoveTowards>().Destination = new Vector3(position.x, position.y + 3, position.z);
+                Transform originPosition = CombatSingleton.Instance.actionData.OriginCharacter.transform.Find("Instantiates").Find("Cast");
+                abilityInstance.transform.position = originPosition.position;
+                abilityInstance.transform.LookAt(position);
             }
         }
     }
@@ -138,39 +138,75 @@ public class ActionAnimation
         {
             if (isHit[i] == true)
             {
-                GameObject target = CombatSingleton.Instance.actionData.TargetCharacters[i];
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.Find("Instantiates").Find("Body").position;
                 abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>(
-                    CombatSingleton.Instance.actionData.ChosenAbility.animation);
-                abilityInstance.transform.position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
-                abilityInstance.GetComponent<MoveTowards>().Destination = new Vector3(target.transform.position.x, target.transform.position.y + 3,
-                    target.transform.position.z);
+                abilityInstance.transform.position = position;
             }
         }
     }
     private void SpawnAboveTarget(List<bool> isHit, GameObject AbilityPrefab)
     {
+        bool atLeast1IsHit = false;
 
         for (int i = 0; i < CombatSingleton.Instance.actionData.TargetCharacters.Count; i++)
         {
+
             if (isHit[i] == true)
             {
-                abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.position = new Vector3(CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.x,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.y + 2,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.z);
-                abilityInstance.transform.localScale *= 4;
-                abilityInstance.GetComponent<MoveTowards>().Destination = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
+                atLeast1IsHit = true;
             }
-            else
+        }
+
+        if (atLeast1IsHit)
+        {
+            abilityInstance = GameObject.Instantiate(AbilityPrefab);
+            Vector3 position = CombatSingleton.Instance.CursorCube.transform.position;
+            abilityInstance.transform.position = new Vector3(position.x, position.y + 3, position.z);
+            abilityInstance.transform.LookAt(position);
+        }
+        else
+        {
+
+            abilityInstance = GameObject.Instantiate(AbilityPrefab);
+            Vector3 position = CombatSingleton.Instance.CursorCube.transform.position;
+            abilityInstance.transform.position = new Vector3(position.x, position.y + 3, position.z);
+            abilityInstance.transform.LookAt(new Vector3(position.x, position.y + 4, position.z));
+        }
+    }
+    private void SpawnAtTargetFeet(List<bool> isHit, GameObject AbilityPrefab)
+    {
+        bool atLeast1IsHit = false;
+
+        for (int i = 0; i < CombatSingleton.Instance.actionData.TargetCharacters.Count; i++)
+        {
+
+            if (isHit[i] == true)
             {
-                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
-                abilityInstance = GameObject.Instantiate(AbilityPrefab);
-                abilityInstance.transform.position = new Vector3(CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.x,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.y + 2,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.z);
-                abilityInstance.GetComponent<MoveTowards>().Destination = new Vector3(position.x+3, position.y, position.z);
+                atLeast1IsHit = true;
             }
+        }
+
+        if (atLeast1IsHit)
+        {
+            abilityInstance = GameObject.Instantiate(AbilityPrefab);
+            if (CombatSingleton.Instance.actionData.TargetCharacters.Count > 1)
+            {
+                Vector3 position = CombatSingleton.Instance.CursorCube.transform.position;
+                abilityInstance.transform.position = new Vector3(position.x, position.y + 0.5f, position.z);
+            }
+            else 
+            {
+
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[0].transform.Find("Instantiates").Find("Feet").position;
+                abilityInstance.transform.position = new Vector3(position.x, position.y, position.z);
+            }
+        }
+        else
+        {
+            abilityInstance = GameObject.Instantiate(AbilityPrefab);
+            Vector3 position = CombatSingleton.Instance.CursorCube.transform.position;
+            abilityInstance.transform.position = new Vector3(position.x, position.y + 4, position.z);
+            abilityInstance.transform.LookAt(new Vector3(position.x, position.y + 6, position.z));
         }
     }
 
@@ -183,14 +219,18 @@ public class ActionAnimation
 
     private void SpawnOnTarget_Item(Item item)
     {
-
+       // Debug.Log("Target Characters count: " + CombatSingleton.Instance.actionData.TargetCharacters.Count);
         for (int i = 0; i < CombatSingleton.Instance.actionData.TargetCharacters.Count; i++)
         {
-            
+
+            //Debug.Log("Target Characters i: " + i);
+            itemPrefab = GameObject.Instantiate(itemPrefab);
+            Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[0].transform.Find("Instantiates").Find("Body").position;
+            itemPrefab.transform.position = position;
         }
     }
 
-    private void SpawnAboveTarget_Capture(List<bool> isHit, GameObject CapturePrefab)
+    private void SpawnCapture(List<bool> isHit, GameObject CapturePrefab)
     {
 
         for (int i = 0; i < CombatSingleton.Instance.actionData.TargetCharacters.Count; i++)
@@ -198,11 +238,8 @@ public class ActionAnimation
             if (isHit[i] == true)
             {
                 capturePrefab = GameObject.Instantiate(CapturePrefab);
-                capturePrefab.transform.position = new Vector3(CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.x,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.y + 2,
-                        CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.z);
-                capturePrefab.GetComponent<MoveTowards>().Destination = CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position;
-                capturePrefab.GetComponent<MoveTowards>().delay = 0;
+                Vector3 position = CombatSingleton.Instance.actionData.TargetCharacters[0].transform.Find("Instantiates").Find("Body").position;
+                capturePrefab.transform.position = position;
             }
             else
             {
@@ -211,7 +248,6 @@ public class ActionAnimation
                 capturePrefab.transform.position = new Vector3(CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.x,
                         CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.y + 2,
                         CombatSingleton.Instance.actionData.TargetCharacters[i].transform.position.z);
-                capturePrefab.GetComponent<MoveTowards>().Destination = new Vector3(position.x+3, position.y, position.z);
             }
         }
     }

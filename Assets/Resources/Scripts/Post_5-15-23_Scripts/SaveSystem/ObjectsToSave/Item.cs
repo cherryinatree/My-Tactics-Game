@@ -8,6 +8,7 @@ public class Item
 
     public List<string> images;
     public string icon;
+    public string animation;
     public string itemName;
     public string itemDiscription;
     public bool consumable = false;

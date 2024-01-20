@@ -21,7 +21,10 @@ public class SoundAnimate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckTriggers();
+        if (CombatSingleton.Instance.battleSystem.State == BATTLESTATE.ACTION)
+        {
+            CheckTriggers();
+        }
     }
 
     public void CheckTriggers()

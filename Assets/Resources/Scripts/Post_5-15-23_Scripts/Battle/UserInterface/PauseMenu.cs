@@ -30,6 +30,9 @@ public class PauseMenu : MonoBehaviour
     public void EscapeBattle()
     {
 
+        CombatSingleton.Instance.isUiOn = false;
+        SaveManipulator.UnloadLoadSceneData();
+        SceneManager.LoadScene("SceneMap");
     }
     public void MainMenu()
     {

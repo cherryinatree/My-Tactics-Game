@@ -65,12 +65,13 @@ public static class ActionMath
         Character targetStats = Target.GetComponent<CombatCharacter>().myStats;
 
 
-        switch (ability.effect)
+        AbilityEffects.Heal(ability, targetStats, originStats);
+        /*switch (ability.effect)
         {
             case ("heal"):
                 AbilityEffects.Heal(ability, targetStats, originStats);
                 break;
-        }
+        }*/
     }
     public static void CalulateBenift(Item item, GameObject Target)
     {
@@ -78,12 +79,13 @@ public static class ActionMath
         Character targetStats = Target.GetComponent<CombatCharacter>().myStats;
 
 
-        switch (item.type)
+        ItemEffects.Heal(item, targetStats);
+       /* switch (item.type)
         {
             case ("heal"):
                 ItemEffects.Heal(item, targetStats);
                 break;
-        }
+        }*/
     }
 
     private static bool DoesItCapture(GameObject target)

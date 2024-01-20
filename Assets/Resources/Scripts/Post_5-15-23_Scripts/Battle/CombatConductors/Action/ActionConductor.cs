@@ -10,7 +10,8 @@ public class ActionConductor : MonoBehaviour
     public Transform UiOriginParent;
     public Transform UiTargetParent;
 
-    public GameObject AbilityPrefab;
+    private GameObject AbilityPrefab;
+    public GameObject CapturePrefab;
 
 
     private ActionUI actionUI;
@@ -60,10 +61,7 @@ public class ActionConductor : MonoBehaviour
         }
         else if (!UItweenStartInitiated)
         {
-            FaceTarget faceTarget = new ();
-            faceTarget.FaceDirection(CombatSingleton.Instance.actionData.OriginCharacter,
-                CombatSingleton.Instance.actionData.TargetCharacters[0]);
-
+            FaceTarget();
             TweenUIBattleStart();
 
         }else if (!UItweenStartCompleted)
@@ -108,6 +106,7 @@ public class ActionConductor : MonoBehaviour
 
     private void ChangeCameraAngle()
     {
+        GameObject.Find("PlayerCamera").GetComponent<CombatCamera>().ResetCamera();
         TargetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
         actionCamera.ChangeCameraAngle(TargetGroup);
     }
@@ -136,6 +135,17 @@ public class ActionConductor : MonoBehaviour
         MathCompleted = true;
     }
 
+
+    private void FaceTarget()
+    {
+        //Debug.Log("target" + CombatSingleton.Instance.actionData.TargetCharacters[0]);
+        //Debug.Log("target" + CombatSingleton.Instance.actionData.OriginCharacter);
+
+        FaceTarget faceTarget = new();
+        faceTarget.FaceDirection(CombatSingleton.Instance.actionData.OriginCharacter,
+            CombatSingleton.Instance.actionData.TargetCharacters[0]);
+    }
+
     private void TweenUIBattleStart()
     {
         actionUI.TweenUIBattleStart(CombatPrefab, UiOriginParent, UiTargetParent);
@@ -149,6 +159,8 @@ public class ActionConductor : MonoBehaviour
 
     private void AnimateActionInitated()
     {
+
+
         if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Item)
         {
             actionAnimation.AnimateActionInitated_Item(CombatSingleton.Instance.actionData.ChosenItem);
@@ -158,21 +170,21 @@ public class ActionConductor : MonoBehaviour
         else if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Capture)
         {
 
-            actionAnimation.AnimateActionInitated_Capture(isHit, AbilityPrefab);
+            actionAnimation.AnimateActionInitated_Capture(isHit, CapturePrefab);
             CombatSingleton.Instance.actionData.OriginCharacter.gameObject.GetComponent<Animator>().SetTrigger("Attack2");
         }
         else
         {
+            AbilityPrefab = GamingTools.ResourseLoader.GetGameObject(CombatSingleton.Instance.actionData.ChosenAbility.animation);
+
             actionAnimation.AnimateActionInitated_Range(isHit, AbilityPrefab, CombatSingleton.Instance.actionData.ChosenAbility);
 
             if (CombatSingleton.Instance.actionData.ChosenAbility.maxDistance <= 1)
             {
-
                 CombatSingleton.Instance.actionData.OriginCharacter.gameObject.GetComponent<Animator>().SetTrigger("Attack1");
             }
             else
             {
-
                 CombatSingleton.Instance.actionData.OriginCharacter.gameObject.GetComponent<Animator>().SetTrigger("Attack2");
             }
         }
@@ -195,7 +207,7 @@ public class ActionConductor : MonoBehaviour
 
             if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Item)
             {
-
+                Debug.Log(CombatSingleton.Instance.actionData.ChosenItem.itemName);
                 ActionMath.CalulateBenift(CombatSingleton.Instance.actionData.ChosenItem, CombatSingleton.Instance.actionData.TargetCharacters[i]);
                 XPgained += RewardsCalculator.ItemXP(CombatSingleton.Instance.actionData.TargetCharacters[i]);
                 isLeveled = RewardsCalculator.CheckIfCharacterLeveledUp(originStats);
@@ -214,6 +226,7 @@ public class ActionConductor : MonoBehaviour
             {
                 if (CombatSingleton.Instance.actionData.ChosenAbility.isFriendly)
                 {
+                    Debug.Log(CombatSingleton.Instance.actionData.ChosenAbility.abilityName);
                     ActionMath.CalulateBenift(CombatSingleton.Instance.actionData.ChosenAbility, CombatSingleton.Instance.actionData.TargetCharacters[i]);
                     XPgained += RewardsCalculator.FriendlyAbilityXP(CombatSingleton.Instance.actionData.TargetCharacters[i]);
                     isLeveled = RewardsCalculator.CheckIfCharacterLeveledUp(originStats);

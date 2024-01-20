@@ -21,7 +21,6 @@ public class TargetGroupController : MonoBehaviour
     {
         if(CombatSingleton.Instance.battleSystem.State == BATTLESTATE.PLAYERTURN || CombatSingleton.Instance.battleSystem.State == BATTLESTATE.ENEMYTURN)
         {
-
             transform.position = CombatSingleton.Instance.CursorCube.transform.position;
             
         }

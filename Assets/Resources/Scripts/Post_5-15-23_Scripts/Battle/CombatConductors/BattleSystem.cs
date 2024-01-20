@@ -42,6 +42,7 @@ public class BattleSystem : MonoBehaviour
         {
             if (timer.ClockTick())
             {
+                CubeManipulator.ResetAllCubes();
                 if(CurrentTeam == 0)
                 {
                     State = BATTLESTATE.PLAYERTURN;

@@ -7,9 +7,29 @@ public class CombatCharacter : MonoBehaviour
 
     public int team = 0;
     public GameObject myCube;
+    private Vector3 cubePosition;
     public Character myStats;
     public bool CombatAware = false;
     public List<GameObject> KnownEnemies = new List<GameObject>();
+
+
+    private void Update()
+    {
+        if(myCube != null)
+        {
+            if(cubePosition != myCube.transform.position)
+            {
+                CubePosition();
+            }
+        }
+    }
+
+
+    public void CubePosition()
+    {
+        cubePosition = myCube.transform.position;
+        transform.position = new Vector3(myCube.transform.position.x, myCube.transform.position.y + 0.5f, myCube.transform.position.z);
+    }
 
     public void NewCube(GameObject newCube)
     {
@@ -19,6 +39,7 @@ public class CombatCharacter : MonoBehaviour
         }
         myCube = newCube;
         myCube.GetComponent<Cube>().MyType = GROUNDTYPE.Occupied;
+        CubePosition();
     }
 
     public void SetStats(Character stats, int team)
@@ -42,8 +63,6 @@ public class CombatCharacter : MonoBehaviour
 
     public void FaceDirection(float facing)
     {
-        //Debug.Log("Facing: " + facing);
-        //transform.rotation = new Quaternion(0, facing, 0, 0);
         transform.Rotate(new Vector3(0, amountToRotate(facing), 0));
         myStats.facing = facing;
     }

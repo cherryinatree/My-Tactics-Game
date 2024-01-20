@@ -11,7 +11,7 @@ public static class PathDisplay
         List<GameObject> actionSquares = new List<GameObject>();
 
 
-        actionSquares = FindActionSquares(originCube, shape, distance);
+        actionSquares = FindActionSquares.FindTheActionSquares(originCube, shape, distance);
 
         foreach (GameObject cube in actionSquares)
         {
@@ -35,8 +35,8 @@ public static class PathDisplay
         else
         {
 
-            actionSquares = FindAllActionSquares(originCube, StringToShape(ability.shape), ability.maxDistance);
-            removeSquares = FindAllActionSquares(originCube, StringToShape(ability.shape), ability.minDistance);
+            actionSquares = FindActionSquares.FindAllActionSquares(originCube, FindActionSquares.StringToShape(ability.shape), ability.maxDistance);
+            removeSquares = FindActionSquares.FindAllActionSquares(originCube, FindActionSquares.StringToShape(ability.shape), ability.minDistance);
 
             foreach (GameObject cube in removeSquares)
             {
@@ -61,7 +61,7 @@ public static class PathDisplay
     public static List<GameObject> ItemSquares(GameObject originCube)
     {
 
-        List<GameObject> actionSquares = FindAllActionSquares(originCube, SHAPE.PLUS, 1);
+        List<GameObject> actionSquares = FindActionSquares.FindAllActionSquares(originCube, SHAPE.PLUS, 1);
 
         foreach (GameObject cube in actionSquares)
         {
@@ -71,7 +71,7 @@ public static class PathDisplay
     }
     public static List<GameObject> CaptureSquares(GameObject originCube)
     {
-        List<GameObject> actionSquares = FindAllActionSquares(originCube, SHAPE.PLUS, 1);
+        List<GameObject> actionSquares = FindActionSquares.FindAllActionSquares(originCube, SHAPE.PLUS, 1);
 
         foreach (GameObject cube in actionSquares)
         {
@@ -83,7 +83,7 @@ public static class PathDisplay
     public static List<GameObject> SpecialSquares(GameObject originCube, SHAPE shape, int distance, CUBEPHASE phase)
     {
 
-        List<GameObject> actionSquares = FindActionSquares(originCube, shape, distance);
+        List<GameObject> actionSquares = FindActionSquares.FindTheActionSquares(originCube, shape, distance);
 
         foreach (GameObject cube in actionSquares)
         {
@@ -136,7 +136,7 @@ public static class PathDisplay
 
         return updatedActionSquares;
     }
-   
+   /*
     private static List<GameObject> FindActionSquares(GameObject originCube, SHAPE shape, int distance)
     {
 
@@ -229,6 +229,6 @@ public static class PathDisplay
         }
         return shape2;
     }
-  
+  */
 
 }

@@ -24,7 +24,6 @@ public class PointMaster : MonoBehaviour
     void Start()
     {
         SaveManipulator.LoadSceneChange();
-        Debug.Log(SaveData.Current.mainData.loadSceneData.currentSceneName);
         FindCurrentNode();
         StartingPoint();
         SetInfoText();

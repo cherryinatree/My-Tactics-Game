@@ -64,6 +64,35 @@ public class Actions : MonoBehaviour
         }
     }
 
+    public void PreviewAIAbility(int abilityID)
+    {
+        //CombatSingleton.Instance.actionData.ResetActionData();
+        JsonRetriever jsonRetriever = new JsonRetriever();
+        Abilities ability = jsonRetriever.Load1Ability(abilityID);
+
+        PathDisplay.AbilitySquares(CombatSingleton.Instance.CursorCube, ability);
+        CombatSingleton.Instance.CursorCube.GetComponent<CubePhase>().BecomeCursor();
+
+        if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Off)
+        {
+            CombatSingleton.Instance.actionData.OriginCharacter = CombatSingleton.Instance.FocusCharacter;
+        }
+
+
+        CombatSingleton.Instance.actionData.ChosenAbility = ability;
+
+        if (ability.isSingleTarget)
+        {
+
+            CombatSingleton.Instance.actionData.Preview = PREVIEWMODE.Action;
+        }
+        else
+        {
+
+            CombatSingleton.Instance.actionData.Preview = PREVIEWMODE.ActionMulti;
+        }
+    }
+
     public void PreviewCapture()
     {
 
@@ -80,23 +109,44 @@ public class Actions : MonoBehaviour
 
     public void PreviewItem(int id)
     {
-
-        CombatSingleton.Instance.actionData.ResetActionData();
-        JsonRetriever jsonRetriever = new JsonRetriever();
-        Item item = jsonRetriever.Load1Item(id);
-
-        PathDisplay.ItemSquares(CombatSingleton.Instance.CursorCube);
-        if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Off)
+        if (id != -1)
         {
-            CombatSingleton.Instance.actionData.OriginCharacter = CombatSingleton.Instance.FocusCharacter;
+            CombatSingleton.Instance.actionData.ResetActionData();
+            JsonRetriever jsonRetriever = new JsonRetriever();
+            Item item = jsonRetriever.Load1Item(id);
+
+            PathDisplay.ItemSquares(CombatSingleton.Instance.CursorCube);
+            if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Off)
+            {
+                CombatSingleton.Instance.actionData.OriginCharacter = CombatSingleton.Instance.FocusCharacter;
+            }
+
+            CombatSingleton.Instance.actionData.ChosenItem = item;
+            CombatSingleton.Instance.actionData.Preview = PREVIEWMODE.Item;
         }
 
-        CombatSingleton.Instance.actionData.ChosenItem = item;
-        CombatSingleton.Instance.actionData.Preview = PREVIEWMODE.Item;
+    }
+    public void PreviewAIItem(int id)
+    {
+        if (id != -1)
+        {
+            //CombatSingleton.Instance.actionData.ResetActionData();
+            JsonRetriever jsonRetriever = new JsonRetriever();
+            Item item = jsonRetriever.Load1Item(id);
+
+            PathDisplay.ItemSquares(CombatSingleton.Instance.CursorCube);
+            if (CombatSingleton.Instance.actionData.Preview == PREVIEWMODE.Off)
+            {
+                CombatSingleton.Instance.actionData.OriginCharacter = CombatSingleton.Instance.FocusCharacter;
+            }
+
+            CombatSingleton.Instance.actionData.ChosenItem = item;
+            CombatSingleton.Instance.actionData.Preview = PREVIEWMODE.Item;
+        }
 
     }
 
-    public void PreviewSpecial()
+    public void PreviewFacing()
     {
 
         CombatSingleton.Instance.actionData.ResetActionData();
@@ -173,7 +223,10 @@ public class Actions : MonoBehaviour
 
     private float faceThisWay(Vector3 start, Vector3 end)
     {
+        start.y = 0;
+        end.y = 0;
         Vector3 dir = (start - end).normalized;
+
         float direction = 0;
         if(dir.x == 1)
         {
@@ -228,42 +281,52 @@ public class Actions : MonoBehaviour
 
     public void Capture()
     {
-
-
         CubeManipulator.ResetAllCubes();
         CombatSingleton.Instance.battleSystem.State = BATTLESTATE.ACTION;
-
-
-
 
         characterInfoCard.UpdateCard();
     }
     public void Abiliy()
     {
-
         CubeManipulator.ResetAllCubes();
         CombatSingleton.Instance.battleSystem.State = BATTLESTATE.ACTION;
-
-
-
 
         characterInfoCard.UpdateCard();
     }
 
     public void Item()
     {
-
-
         CubeManipulator.ResetAllCubes();
         CombatSingleton.Instance.battleSystem.State = BATTLESTATE.ACTION;
-
-
-
 
         characterInfoCard.UpdateCard();
     }
     public void Special()
     {
+        CubeTrigger cubeTrigger = 
+            CombatSingleton.Instance.FocusCharacter.GetComponent<CombatCharacter>().myCube.GetComponent<CubeTrigger>();
 
+        if (cubeTrigger != null)
+        {
+            if (!cubeTrigger.isSingleUse)
+            {
+                activateTrigger(cubeTrigger);
+            }
+            else
+            {
+                if (!cubeTrigger.IsUsed())
+                {
+                    activateTrigger(cubeTrigger);
+                }
+            }
+        }
+    }
+
+    private void activateTrigger(CubeTrigger cubeTrigger)
+    {
+
+        CombatSingleton.Instance.actionData.ResetActionData();
+        cubeTrigger.ActivateTriggers();
+        CharacterManipulator.RemoveActionPoints(CombatSingleton.Instance.FocusCharacter, 1);
     }
 }

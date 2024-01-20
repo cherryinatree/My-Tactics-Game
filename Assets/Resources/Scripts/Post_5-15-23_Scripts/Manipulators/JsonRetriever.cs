@@ -70,6 +70,7 @@ public class JsonRetriever
             items[i].itemName = ItemData.items[i].itemName;
             items[i].itemDiscription = ItemData.items[i].itemDiscription;
             items[i].icon = ItemData.items[i].icon;
+            items[i].animation = ItemData.items[i].animation;
             items[i].consumable = ItemData.items[i].consumable;
             items[i].type = ItemData.items[i].type;
             items[i].buyPrice = ItemData.items[i].buyPrice;
@@ -248,6 +249,7 @@ public class JsonRetriever
                 item.itemName = ItemData.items[i].itemName;
                 item.itemDiscription = ItemData.items[i].itemDiscription;
                 item.icon = ItemData.items[i].icon;
+                item.animation = ItemData.items[i].animation;
                 item.consumable = ItemData.items[i].consumable;
                 item.type = ItemData.items[i].type;
                 item.buyPrice = ItemData.items[i].buyPrice;

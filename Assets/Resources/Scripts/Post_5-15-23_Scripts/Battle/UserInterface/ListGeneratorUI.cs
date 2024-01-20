@@ -20,6 +20,7 @@ public static class ListGeneratorUI
         foreach (string[] item in cardInfo)
         {
             GameObject card = FillCards.CombatActionCard(CardPrefab, content, item);
+            if(item[0] != null)
             card.GetComponent<Button>().onClick.AddListener(() => InvokeDisplay(item));
         }
     }
@@ -37,8 +38,11 @@ public static class ListGeneratorUI
         }else if(cardInfo[4] == "item")
         {
 
-            GameObject.Find("ActionsMaster").GetComponent<Actions>().PreviewItem(id);
-            GameObject.Find("GameMaster").GetComponent<InteractMenus>().ResetPanels();
+            if (int.TryParse(cardInfo[3], out id))
+            {
+                GameObject.Find("ActionsMaster").GetComponent<Actions>().PreviewItem(id);
+                GameObject.Find("GameMaster").GetComponent<InteractMenus>().ResetPanels();
+            }
         }
     }
 

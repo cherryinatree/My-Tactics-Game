@@ -10,7 +10,6 @@ public class ActionUI
 
     public void TweenUIBattleStart(GameObject CombatPrefab, Transform UiOriginParent, Transform UiTargetParent)
     {
-        
         UI = GameObject.Instantiate(CombatPrefab);
         FillCards.FillAttackDefendCard(UI, UiOriginParent.gameObject, CombatSingleton.Instance.actionData.OriginCharacter);
         UI.transform.position = UiOriginParent.position;

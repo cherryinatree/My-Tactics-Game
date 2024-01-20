@@ -26,7 +26,7 @@ public class CubeColor : MonoBehaviour
 
         rend = gameObject.GetComponent<Renderer>();
         origional = rend.material;
-        origional = (Material)Resources.Load("Materials/Green1", typeof(Material));
+        //origional = (Material)Resources.Load("Materials/Green1", typeof(Material));
         selected = (Material)Resources.Load("Materials/Yellow", typeof(Material));
         origin = (Material)Resources.Load("Materials/Origin", typeof(Material));
         item = (Material)Resources.Load("Materials/Item", typeof(Material));

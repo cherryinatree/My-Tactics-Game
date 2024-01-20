@@ -56,12 +56,29 @@ public class BoardSetUp : MonoBehaviour
                 LoadCharactersInCorrectPlace();
                 GatherNonGeneratedEnemies();
                 LoadNonGeneratedEnemiesInCorrectPlace();
+               // SetUpSaveObjects();
             }
             else
             {
+                //CombatSingleton.Instance.SaveObjects = new List<GameObject>();
                 SpawnCharacters();
                 GatherNonGeneratedEnemies();
                 ResetCharacters();
+            }
+        }
+    }
+
+    private void SetUpSaveObjects()
+    {
+        foreach(GameObject gObject in CombatSingleton.Instance.SaveObjects)
+        {
+            Debug.Log(gObject.name);
+            foreach(MyChange myChange in SaveData.Current.mainData.loadSceneData.boardChanges.changes)
+            {
+                if(gObject.name == myChange.nameID)
+                {
+                    gObject.GetComponent<MyDataUploader>().LoadPreviousChanges(myChange);
+                }
             }
         }
     }
@@ -93,15 +110,12 @@ public class BoardSetUp : MonoBehaviour
                 {
                     string path = route + characterStats.modelPath;
 
-                    Debug.Log(characterStats.characterClass);
-                    Debug.Log(characterStats.modelPath);
                     GameObject body = GamingTools.ResourseLoader.GetGameObject(path);
-                    Debug.Log(path);
                     GameObject character = GameObject.Instantiate(body);
 
                     character.GetComponent<CombatCharacter>().NewCube(cube.gameObject);
                     character.GetComponent<CombatCharacter>().SetStats(characterStats, team);
-                    character.transform.position = new Vector3(cube.transform.position.x, cube.transform.position.y + 0.5f, cube.transform.position.z);
+                    //character.transform.position = new Vector3(cube.transform.position.x, cube.transform.position.y + 0.5f, cube.transform.position.z);
 
                     CombatSingleton.Instance.Combatants.Add(character);
                     break;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public IState currentState;
-    public StatePatrol statePatrol = new StatePatrol();
+    public StatePlanning statePlanning = new StatePlanning();
     private bool isAI;
 
     // Set the initial state
@@ -14,7 +14,7 @@ public class StateMachine : MonoBehaviour
         if(GetComponent<CombatCharacter>().team != 0)
         {
             isAI = true;
-            TransitionToState(statePatrol);
+            TransitionToState(statePlanning);
         }
         else
         {
@@ -35,7 +35,6 @@ public class StateMachine : MonoBehaviour
     // Transition to a new state
     public void TransitionToState(IState newState)
     {
-
         currentState = newState;
         currentState.EnterState(this);
     }

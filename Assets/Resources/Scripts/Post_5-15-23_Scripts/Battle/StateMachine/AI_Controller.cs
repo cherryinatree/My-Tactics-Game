@@ -30,7 +30,8 @@ public class AI_Controller : MonoBehaviour
     {
         if(CombatSingleton.Instance.battleSystem.State == BATTLESTATE.ENEMYTURN)
         {
-            if(CombatSingleton.Instance.FocusCharacter == null)
+            FillEnemyCombatants();
+            if (CombatSingleton.Instance.FocusCharacter == null)
             {
                 FillEnemyCombatants();
                 CombatSingleton.Instance.FocusCharacter = Combatants[0];
@@ -50,23 +51,18 @@ public class AI_Controller : MonoBehaviour
             {
                 if(currentEnemy < Combatants.Count)
                 {
-
-                    Debug.Log(currentEnemy);
                     CombatSingleton.Instance.FocusCharacter = Combatants[currentEnemy];
                     currentEnemy++;
                 }
                 else
                 {
-                    Debug.Log(CombatSingleton.Instance.actionData.AiAction);
                     if (CombatSingleton.Instance.actionData.AiAction==false)
                     {
-                        Debug.Log(CombatSingleton.Instance.actionData.AiAction);
                         currentEnemy = 0;
                         CombatSingleton.Instance.FocusCharacter = null;
                         CombatSingleton.Instance.battleSystem.TurnChange();
                     }
                 }
-
             }
         }
     }
